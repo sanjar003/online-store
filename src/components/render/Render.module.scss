@@ -1,13 +1,15 @@
-.container{
-    width: 150px;
-    // height: 100px;
-    background-color: red;
-//     padding: 20px;
-   img{
-    width: 60px;
-   }
- }
- .containerr{
-  width: 220px;
-  background-color: red;
- }
+.container {
+	width: 190px;
+	background-color: red;
+  text-align: center;
+	img {
+		width: 60px;
+	}
+}
+.containerr {
+	width: 420px;
+	background-color: red;
+  display: flex;
+  gap: 30px;
+  margin-top: 10px;
+}

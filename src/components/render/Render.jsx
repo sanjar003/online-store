@@ -3,7 +3,7 @@ import scss from './Render.module.scss';
 
 const Render = ({ menuItemss }) => {
 	const [orderBasket, setOrderBasket] = useState([]);
-    console.log(orderBasket);
+	// console.log(orderBasket);
 
 	const renderData = () => {
 		return (
@@ -23,44 +23,79 @@ const Render = ({ menuItemss }) => {
 		);
 	};
 
+	// massiv push
+	const pushProduct = (id) => {
+		const existingProduct = orderBasket.find((el) => el.id === id);
+
+		if (existingProduct) {
+			const newData = menuItemss.find((el) => el.id === id);
+			setOrderBasket((prevOrderBasket) => {
+				const updatedBasket = prevOrderBasket.map((product) => {
+					if (product.id === id) {
+						return {
+							...product,
+							count: product.count + 1,
+							price: product.price + newData.price
+						};
+					}
+					return product;
+				});
+				return updatedBasket;
+			});
+		} else {
+			const newData = menuItemss.find((el) => el.id === id);
+			const newProduct = { ...newData, count: 1 };
+			setOrderBasket((prevOrderBasket) => [...prevOrderBasket, newProduct]);
+		}
+	};
+	//    kolichistvo
+	const renderTotalOrder = () => {
+		let totalQuantity = 0;
+		let totalPrice = 0;
+
+		orderBasket.forEach((el) => {
+			totalQuantity += el.price;
+			totalPrice += el.count;
+		});
+		return (
+			<div>
+				<h1>Все цена {totalQuantity}</h1>
+				<h1>Штук:{totalPrice}</h1>
+			</div>
+		);
+	};
+
 	const renderOrder = () => {
 		return orderBasket.map((el, index) => (
 			<div key={index} className={scss.containerr}>
-				<img src={el.img} alt={el.name} />
-				<p>count: {el.title}</p>
-				<p>price: {el.price}</p>
+				<div>
+					<p>title: {el.title}</p>
+				</div>
+				<div>
+					<p>price: {el.price}</p>
+				</div>
+				<div>
+					<p>count: {el.count}</p>
+				</div>
+				<button onClick={() => deleteProduct(el.id, index)}>delete</button>
 			</div>
 		));
 	};
 
-        const renderTotalOrder = () => {
-        let totalQuantity = 0;
-        let totalPrice = 1;
+	// delete button
+	const deleteProduct = (id, index) => {
+		console.log(index, 'delete');
 
-        orderBasket.forEach((el) => {
-            totalQuantity += el.price
-            totalPrice += el.title
-        })
-        return(
-            <div>
-                <h1>You have {totalQuantity}</h1>
-                <h1>Штук:{totalPrice}</h1>
-            </div>
-        )
-    }
+		const deleteProduct = orderBasket[index];
 
-	// massiv push
-	const pushProduct = (id) => {
-		const Product = orderBasket.find((el) => el.id === id);
-
-		if (Product) {
-			const NewData = menuItemss.find((el) => el.id === id);
-			Product.count += 1;
-			Product.price += NewData.price;
+		if (deleteProduct.count > 1) {
+			const newDate = menuItemss.find((el) => el.id === id);
+			deleteProduct.count -= 1;
+			deleteProduct.price -= newDate.price;
 		} else {
-			const newData = menuItemss.find((el) => el.id === id);
-			const newProduct = { ...newData, count: 1 };
-			setOrderBasket([...orderBasket, newProduct]);
+			const newBasket = [...orderBasket];
+			newBasket.splice(index, 1);
+			setOrderBasket(newBasket);
 		}
 	};
 	//
@@ -68,7 +103,7 @@ const Render = ({ menuItemss }) => {
 		<div>
 			{renderData()}
 			<div>{renderOrder()}</div>
-            <div>{renderTotalOrder()}</div>
+			<div>{renderTotalOrder()}</div>
 		</div>
 	);
 };

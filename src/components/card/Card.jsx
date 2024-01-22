@@ -50,7 +50,7 @@ const Card = () => {
     const [menuItem, setMenuItem] = useState(menuItems)
   return (
     <div className={scss.Container}>
-        <Render menuItemss={menuItem}/>
+        <Render menuItemss={menuItem} setMenuItem={setMenuItem}/>
     </div>
   )
 }
